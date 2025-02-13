@@ -46,14 +46,8 @@ A Django-based web application that scrapes product data from Amazon, generates 
    # Build the Docker images
    docker-compose build
 
-   # Start the services
-   docker-compose up -d
-
-   # Run migrations
-   docker-compose exec web python ProductAnalyzer/manage.py migrate
-
-   # Collect static files
-   docker-compose exec web python ProductAnalyzer/manage.py collectstatic --noinput
+   # Start the services and run the entrypoint
+   docker compose up --build -d
    ```
 
 The application will be available at `http://localhost:8000`
