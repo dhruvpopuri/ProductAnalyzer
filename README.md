@@ -83,10 +83,11 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 - Go to http://localhost:8000/swagger/
 - First go to the scrape API and click on the drop-down and click on try it out. Modify and set the number of pages and the search term according to your preferences.
 - Next go to the process drop-down and click on try it out, there you can set the search key for which you want to process the insights from the scraped data.
+- Hit the insights API with your search term to get the trend insights for that search term/product.
 - Then you can use the various get APIs (via Swagger try-it-out) to get the data.
+- You can find the AI generated summaries in the list and retrieve products endpoint
 - Added pagination for the list products API, so specify the pages, and num items per page.
-- Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout.
-- Hit the insights API with your search term to get the trend insights for that product.
+- Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout. You can also monitor logs of the django container to ensure everything is running smoothly.
 
 ## Testing notes
 - To simplify and reduce testing time , I have compiled scraped data in products_backup.json (about 200 laptop products), you can restore the products into the db using the command `sudo docker exec -t productanalysis-web-1 python restore_product_data.py`. Then you can run the process API with the search term `laptops` to inference with the LLM and store the trends data.
