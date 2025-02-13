@@ -70,6 +70,7 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 - All operations are logged to `django.log` for debugging
 - Database operations use transactions to ensure data consistency
 - All of the above APIs can be tested and viewed from the /swagger/ subpath (http://localhost:8000/swagger/).
+- Used to_dict methods on models instead of serializers for performance considerations
 
 ## Monitoring and Logs
 - Application logs are written to `django.log`
