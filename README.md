@@ -75,7 +75,7 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 - Application logs are written to `django.log`
 - Docker logs can be viewed using:
   ```bash
-  docker-compose logs -f web
+  docker logs -f productanalysis-web-1
   ```
 
 ## Using Swagger to Test the endpoints
@@ -84,3 +84,4 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 - Next go to the process drop-down and click on try it out, there you can set the search key for which you want to process the insights from the scraped data.
 - Then you can use the various get APIs (via Swagger try-it-out) to get the data.
 - Added pagination for the list products API, so specify the pages, and num items per page.
+- Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout
