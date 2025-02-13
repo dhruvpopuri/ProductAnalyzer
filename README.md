@@ -18,7 +18,7 @@ A Django-based web application that scrapes product data from Amazon, generates 
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd product-analyzer
+   cd ProductAnalyzer
    ```
 
 2. **Environment Setup:**
