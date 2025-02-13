@@ -66,7 +66,7 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 
 ## Development Notes
 - The scraping may take upto 5-10 minutes depending upon the number of pages (each page has around 15-20 unique items), as I have chosen to scrape from amazon for a more relatable real-life use-case, and have implemented a variety of strategies such as User-Agent rotation, exponential backoff etc in order to scrape from it.
-- LLM processing is done in configurable batches (default: 6 products per batch, as the context size for the free tier may be exceeded). Each batch takes almost 35-50 seconds in order to be processed.
+- LLM processing is done in configurable batches (default: 5 products per batch, as the context size for the free tier may be exceeded). Each batch takes almost 35-50 seconds in order to be processed.
 - All operations are logged to `django.log` for debugging
 - Database operations use transactions to ensure data consistency
 - All of the above APIs can be tested and viewed from the /swagger/ subpath (http://localhost:8000/swagger/).
@@ -80,9 +80,9 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
   ```
 
 ## Using Swagger to Test the endpoints
-- Head over to http://localhost:8000/swagger/
+- Go to http://localhost:8000/swagger/
 - First go to the scrape API and click on the drop-down and click on try it out. Modify and set the number of pages and the search term according to your preferences.
 - Next go to the process drop-down and click on try it out, there you can set the search key for which you want to process the insights from the scraped data.
 - Then you can use the various get APIs (via Swagger try-it-out) to get the data.
 - Added pagination for the list products API, so specify the pages, and num items per page.
-- Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout
+- Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout.
