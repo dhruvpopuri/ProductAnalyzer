@@ -52,25 +52,19 @@ class GroqClient:
         self, 
         prompt: str, 
         expected_format: Dict,
-        temperature: float = 0.3,
+        temperature: float = 0.1,
         max_tokens: int = 1000
     ) -> Dict:
         """
         Generate a structured JSON response from the LLM
-        
-        Args:
-            prompt: The prompt to send to the LLM
-            expected_format: Example of the expected JSON format
-            temperature: Controls randomness (0-1)
-            max_tokens: Maximum tokens in response
         """
         formatted_prompt = f"""
         {prompt}
         
-        You must respond with valid JSON in exactly this format:
+        You must respond with valid JSON in exactly this format. Do not include any additional text or explanation:
         {json.dumps(expected_format, indent=2)}
         
-        Response:
+        Ensure your response is valid JSON and matches the exact format above.
         """
         
         try:
@@ -84,59 +78,7 @@ class GroqClient:
             logger.debug(f"Raw response: {result}")
             logger.error(f"Error parsing JSON response: {str(e)}")
             return None
+                
         except Exception as e:
             logger.error(f"Error generating response: {str(e)}")
             return None
-
-    def generate_summaries(self, products_data: List[Dict]) -> List[Dict]:
-        """Generate summaries for a batch of products"""
-        expected_format = [
-            {
-                "uuid": "product-uuid",
-                "summary": "Product summary text"
-            }
-        ]
-        
-        prompt = f"""
-        For each product in the following list, generate a concise summary highlighting key features and value proposition.
-        Keep each summary under 100 words.
-        
-        Products:
-        {json.dumps(products_data, indent=2)}
-        """
-        
-        return self.generate_structured_completion(
-            prompt=prompt,
-            expected_format=expected_format,
-            temperature=0.3
-        )
-
-    def analyze_trends(self, products_data: List[Dict]) -> Dict:
-        """Analyze trends in product data"""
-        expected_format = {
-            "trends": [
-                {
-                    "title": "Example trend title",
-                    "description": "Trend description",
-                    "supporting_data": "Statistical evidence"
-                }
-            ],
-            "summary": "Overall market analysis"
-        }
-        
-        prompt = f"""
-        Analyze the following product dataset and identify the top 3 trends based on pricing and ratings.
-        Focus on:
-        1. Price ranges and clusters
-        2. Price-to-rating relationships
-        3. Common features across price points
-        
-        Products:
-        {json.dumps(products_data, indent=2)}
-        """
-
-        return self.generate_structured_completion(
-            prompt=prompt,
-            expected_format=expected_format,
-            temperature=0.3
-        ) 
