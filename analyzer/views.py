@@ -175,13 +175,13 @@ class ScrapingView(APIView):
             )
             
             successful_scrapes = 0
-            logger.info(f"Received total of {len(product_links)} product links from scrape")
+            logger.info(f"Received total of {len(product_links) - 1} product links from scrape")
             with transaction.atomic():
                 for url in product_links:
                     try:
                         product_data = scraper.scrape_product(url, search_term)
                         if product_data:
-                            p = Product.objects.create(**product_data)
+                            Product.objects.create(**product_data)
                             successful_scrapes += 1
                             logger.info(f"Scraped {successful_scrapes}")
                     except Exception as e:

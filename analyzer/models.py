@@ -19,13 +19,6 @@ class Product(BaseModel):
     ai_summary = models.TextField(null=True, blank=True)
     search_key = models.CharField(max_length=450, default="laptops")
 
-    class Meta:
-        indexes = [
-            models.Index(fields=['name']),
-            models.Index(fields=['price']),
-            models.Index(fields=['rating']),
-        ]
-
     def to_dict(self):
         return {
             'uuid': str(self.uuid),

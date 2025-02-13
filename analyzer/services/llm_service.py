@@ -83,7 +83,6 @@ class LLMService:
         {json.dumps(products_data, indent=2)}
         Respond with a valid JSON object containing exactly three trends and a summary.
         Each trend must have a title, description, and supporting_data as strings.
-        Do not include any explanatory text outside the JSON structure.
         """
         
         return self.client.generate_structured_completion(

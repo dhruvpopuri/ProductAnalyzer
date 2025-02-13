@@ -31,7 +31,7 @@ class AmazonScraper:
     @retry(
         retry=retry_if_exception_type(requests.exceptions.RequestException),
         stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=4, max=8)
+        wait=wait_exponential(multiplier=1, min=2, max=8)
     )
     def _make_request(self, url: str, params: dict = None) -> requests.Response:
         """Make a request with retry logic and random delays"""
@@ -84,7 +84,7 @@ class AmazonScraper:
     @retry(
         retry=retry_if_exception_type(requests.exceptions.RequestException),
         stop=stop_after_attempt(3),
-        wait=wait_exponential(multiplier=1, min=4, max=8)
+        wait=wait_exponential(multiplier=1, min=2, max=8)
     )
     def scrape_product(self, url: str, search_term: str) -> dict:
         """Scrape product details"""
