@@ -86,3 +86,7 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 - Then you can use the various get APIs (via Swagger try-it-out) to get the data.
 - Added pagination for the list products API, so specify the pages, and num items per page.
 - Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout.
+
+## Testing notes
+- To simplify and reduce testing time , I have compiled scraped data in products_backup.json (about 200 laptop products), you can restore the products into the db using the command `sudo docker exec -t productanalysis-web-1 python restore_product_data.py`. Then you can run the process API with the search term `laptops` to inference with the LLM and store the trends data.
+- In case you want to use any other search key, you may scrape the data using the scrape endpoint (which takes 5-7 seconds per listing), and subsequently use that search term for the process and insight endpoints.
