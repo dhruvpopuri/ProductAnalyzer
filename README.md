@@ -27,7 +27,7 @@ A Django-based web application that scrapes product data from Amazon, generates 
    ```env
    # Django settings
    DEBUG=True
-   SECRET_KEY=your-secret-key-here
+   SECRET_KEY=your-django-secret-key-here
    DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
 
    # Database settings
@@ -90,6 +90,8 @@ Visit `http://localhost:8000/swagger/` for interactive API documentation and tes
 - Please note for some of the extremely long running requests, swagger might not show the response, so please use a python script with long request timeout. You can also monitor logs of the django container to ensure everything is running smoothly.
 
 ## Testing notes
-- To simplify and reduce testing time , I have compiled scraped data in products_backup.json (about 200 laptop products), you can restore the products into the db using the command `sudo docker exec -t productanalysis-web-1 python restore_product_data.py`. Then you can run the process API with the search term `laptops` to inference with the LLM and store the trends data.
+- To simplify and reduce testing time , I have compiled scraped data in products_backup.json (about 200 laptop listings), you can restore the products into the db using the command
+`sudo docker exec -t productanalysis-web-1 python restore_product_data.py`
+Then you can run the process API with the search term `laptops` to inference with the LLM and store the trends data.
 - Note that the products_backup.json file does not contain any of the AI generated content, that will only be available after calling the `/process` endpoint.
 - In case you want to use any other search key, you may scrape the data using the scrape endpoint (which takes 5-7 seconds per listing), and subsequently use that search term for the process and insight endpoints.
