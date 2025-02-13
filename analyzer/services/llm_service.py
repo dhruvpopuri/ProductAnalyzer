@@ -13,6 +13,13 @@ class LLMService:
 
     def _chunk_products(self, products: List[Product], chunk_size: int = 4) -> List[List[Product]]:
         """Split products into smaller chunks for efficient processing"""
+        if not products:
+            return []
+            
+        # For the last chunk, reduce size if it's too close to the full chunk size
+        if len(products) % chunk_size == 3:  # If last chunk would be size 3
+            chunk_size = 3  # Reduce chunk size to avoid context limit
+            
         return [products[i:i + chunk_size] for i in range(0, len(products), chunk_size)]
 
     def _generate_product_summaries(self, products_data: List[Dict]) -> List[Dict]:
@@ -24,19 +31,33 @@ class LLMService:
             }
         ]
         
+        # Simplified prompt to reduce token count
         prompt = f"""
-        For each product in the following list, generate a concise summary highlighting key features and value proposition.
-        Keep each summary under 100 words.
-        
+        Generate concise summaries (max 75 words each) for these products, highlighting key features and value:
+
         Products:
         {json.dumps(products_data, indent=2)}
         """
         
-        return self.client.generate_structured_completion(
-            prompt=prompt,
-            expected_format=expected_format,
-            temperature=0.3
-        )
+        try:
+            return self.client.generate_structured_completion(
+                prompt=prompt,
+                expected_format=expected_format,
+                temperature=0.3,
+                max_tokens=800  # Adjust based on your needs
+            )
+        except Exception as e:
+            logger.error(f"Error generating summaries for chunk: {str(e)}")
+            # Handle the last chunk specially if it fails
+            if len(products_data) > 2:
+                logger.info("Retrying with smaller chunk size")
+                # Split the chunk and try again
+                mid = len(products_data) // 2
+                first_half = self._generate_product_summaries(products_data[:mid])
+                second_half = self._generate_product_summaries(products_data[mid:])
+                if first_half and second_half:
+                    return first_half + second_half
+            return None
 
     def _analyze_product_trends(self, products_data: List[Dict]) -> Dict:
         """Analyze trends in product data"""
@@ -82,7 +103,11 @@ class LLMService:
 
         # Generate summaries in batches
         all_summaries = []
-        for chunk in self._chunk_products(products):
+        chunks = self._chunk_products(products)
+        total_chunks = len(chunks)
+        
+        for i, chunk in enumerate(chunks, 1):
+            logger.info(f"Processing chunk {i} of {total_chunks}")
             products_data = [{
                 'uuid': str(p.uuid),
                 'name': p.name,
@@ -94,12 +119,21 @@ class LLMService:
             summaries = self._generate_product_summaries(products_data)
             if summaries:
                 all_summaries.extend(summaries)
+            else:
+                logger.warning(f"Failed to process chunk {i}")
 
         # Update product summaries
+        successful_updates = 0
         for summary in all_summaries:
-            Product.objects.filter(uuid=summary['uuid']).update(
-                ai_summary=summary['summary']
-            )
+            try:
+                Product.objects.filter(uuid=summary['uuid']).update(
+                    ai_summary=summary['summary']
+                )
+                successful_updates += 1
+            except Exception as e:
+                logger.error(f"Error updating product {summary['uuid']}: {str(e)}")
+
+        logger.info(f"Successfully updated {successful_updates} product summaries")
 
         # Generate trends analysis using products with the same search key
         products_data = [{
@@ -109,10 +143,13 @@ class LLMService:
         } for p in products]
 
         trends_analysis = self._analyze_product_trends(products_data)
-        
+
         if trends_analysis:
+            # Get search_key from the first product (they all have the same search_key)
+            search_key = products[0].search_key if products else "laptops"
             trend = ProductTrend.objects.create(
-                trend_analysis=trends_analysis
+                trend_analysis=trends_analysis,
+                search_key=search_key
             )
             return trend.to_dict()
 

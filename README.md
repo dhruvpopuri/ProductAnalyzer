@@ -4,7 +4,7 @@ A Django-based web application that scrapes product data from Amazon, generates 
 
 ## Features
 - Amazon product scraping with retry logic and rate limiting
-- AI-powered product summaries using Groq's Mixtral model
+- AI-powered product summaries using Llama-3.2-3b-preview
 - Automated trend analysis and insights
 - RESTful API with Swagger documentation
 - Efficient batch processing for large datasets

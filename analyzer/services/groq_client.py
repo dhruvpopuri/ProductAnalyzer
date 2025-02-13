@@ -12,7 +12,7 @@ class GroqClient:
     
     def __init__(self):
         self.client = groq.Groq(api_key=settings.GROQ_API_KEY)
-        self.model = "mixtral-8x7b-32768"
+        self.model = "llama-3.2-3b-preview"
         
     @retry(
         stop=stop_after_attempt(3),

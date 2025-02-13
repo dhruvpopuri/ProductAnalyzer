@@ -42,6 +42,7 @@ class Product(BaseModel):
 class ProductTrend(BaseModel):
     trend_date = models.DateField(auto_now_add=True)
     trend_analysis = models.JSONField()
+    search_key = models.CharField(max_length=450, default="laptops")
 
     class Meta:
         get_latest_by = 'created_at'

@@ -128,7 +128,7 @@ class ProductInsightsView(BaseAPIView):
         try:
             search_key = request.data.get('search_key', 'laptops')
             latest_trend = ProductTrend.objects.filter(
-                product__search_key=search_key
+                search_key=search_key
             ).latest('created_at')
             
             return self.json_response({
