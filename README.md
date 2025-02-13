@@ -43,10 +43,7 @@ A Django-based web application that scrapes product data from Amazon, generates 
 
 3. **Build and Start Services:**
    ```bash
-   # Build the Docker images
-   docker-compose build
-
-   # Start the services and run the entrypoint
+   # Build and start the services
    docker compose up --build -d
    ```
 
